@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO Snake</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="keys">
+        <p>w , a, s, d</p>
+    </div>
+    <canvas id="game" width="750" height="600"></canvas>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        var socket = io("https://snake-game-multi.herokuapp.com/");
+        const tileCount = 20;
+        const mapSize = 600;
+
+        var c = document.getElementById("game");
+        var ctx = c.getContext("2d");
+
+        document.addEventListener("keydown", (e) => {
+            socket.emit("key", e.keyCode);
+        });
+
+        function draw(players, apple) {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, c.width, c.height)
+
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(mapSize + 5, 1, 1, c.height)
+
+            var i = 40
+            for (const key in players) {
+                ctx.fillStyle = "white";
+                ctx.font = "30px Arial";
+                ctx.fillText(`${players[key].color} ${players[key].trail.length - 2}`, mapSize + 10, i);
+                i += 40;
+            }
+
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(apple.x * tileCount, apple.y * tileCount, tileCount - 5, tileCount - 5);
+
+
+            for (const key in players) {
+                ctx.fillStyle = players[key].color;
+                players[key].trail.forEach((t) => {
+                    ctx.fillRect(t.x * tileCount, t.y * tileCount, tileCount - 5, tileCount - 5);
+                });
+            }
+        }
+
+
+        socket.on("state", function (players, apple) {
+            draw(players, apple)
+        });
+
+    </script>
+</body>
+
+</html>
