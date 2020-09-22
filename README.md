@@ -1,5 +1,5 @@
 ## Twitter Clone Frontend
- - Live: snake-game-scozdev.netlify.app/
+ - Live: https://snake-game-scozdev.netlify.app/
 
 ## :rocket: Tech Stack
 
